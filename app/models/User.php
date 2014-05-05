@@ -6,21 +6,14 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'users';
-
-	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
 	protected $hidden = array('password');
 
-	protected $fillable = array('email', 'firstname', 'lastname');
-	protected $guarded = array('id', 'password');
+	protected $fillable = array('email', 'first_name', 'last_name', 'mobile_number');
+	protected $guarded = array('id', 'password', 'password_salt', 'privilege_id');
 	public $timestamps = false;
 
 	/**
@@ -62,6 +55,4 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     {
         //
     }
-
-
 }

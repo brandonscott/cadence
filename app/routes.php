@@ -24,6 +24,8 @@ Route::get('/jimmy', function()
 Route::get('/users', 'UserController@getAll');
 Route::get('/users/store', 'UserController@store');
 
+Route::get('/pulse', 'PulseController@getAll');
+Route::post('/pulse', 'PulseController@store');
 
 Route::any('/pubnub', 'pubnub::simplechat@index');
 Route::any('(:bundle)/login', 'pubnub::simplechat@login');
