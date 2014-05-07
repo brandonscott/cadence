@@ -3,7 +3,6 @@
 		
 		public function getAll()
 		{
-			
 			return Response::json(Pulse::all());
 		}
 
@@ -22,12 +21,11 @@
 
 			$pubnub = App::make('pubnub');
 			$pubnub->publish(array(
-				'channel' => 'Cadence',
+				'channel' => 'pulses',
 				'message' => json_decode($pulse)
 			));
 
 			return Response::json($pulse);
-
 		}
 	}
 ?>
