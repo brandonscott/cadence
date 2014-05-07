@@ -1,8 +1,8 @@
 <?php
 	class UserController extends BaseController{
 
-		protected $fillable = array('email', 'firstname', 'lastname');
-		protected $guarded = array('id', 'password');
+		protected $fillable = array('email', 'first_name', 'last_name', 'mobile_number');
+		protected $guarded = array('id', 'password', 'privilege_id');
 		
 		public function getAll()
 		{
@@ -27,11 +27,22 @@
 
 		public function store()
 		{
-			return User::create([
+			/*return User::create([
 				"email"			=> Input::get("email"),
 				"firstname"		=> Input::get("firstname"),
 				"lastname"		=> Input::get("lastname")
-			]);
+			]);*/
+			$user = new User;
+			$user->privilege_id = Input::get("privilege_id");
+			$user->password = Input::get("password");
+			$user->email = Input::get("email");
+			$user->first_name = Input::get("first_name");
+			$user->last_name = Input::get("last_name");
+			$user->mobile_number = Input::get("mobile_number");
+
+			$user->save();
+
+			return Response::json($user);
 		}
 	}
 ?>
