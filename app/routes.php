@@ -11,21 +11,25 @@
 |
 */
 
-Route::get('/', function()
-{
-	return "Hello World";
-});
-
-Route::get('/jimmy', function()
-{ 
-	return Response::json("Jimmy");
-});
-
 Route::get('/users', 'UserController@getAll');
-Route::get('/users/store', 'UserController@store');
+Route::post('/users', 'UserController@store');
 
-Route::get('/pulse', 'PulseController@getAll');
-Route::post('/pulse', 'PulseController@store');
+Route::get('/auth', 'AuthenticationController@auth');
+
+Route::get('/pulses', 'PulseController@getAll');
+Route::post('/pulses', 'PulseController@store');
+
+Route::group(array('before' => 'superadmin.auth'), function() {
+	Route::get('/servers/{id}', 'ServerController@getServer');
+	Route::put('/servers/{id}', 'ServerController@updateServerDetails');
+	Route::get('/servers', 'ServerController@getAll');
+	Route::post('/servers', 'ServerController@store');
+	Route::put('/servers/{guid}/status', 'ServerController@changeStatus');
+	Route::get('/servers/{id}/pulses', 'ServerController@getPulses');
+	Route::get('/servers/{id}/pulses/latest', 'ServerController@getLatestPulse');
+	Route::get('/servers/{id}/pulses/{days}', 'ServerController@getPulsesForDays');
+	
+});
 
 Route::any('/pubnub', 'pubnub::simplechat@index');
 Route::any('(:bundle)/login', 'pubnub::simplechat@login');
