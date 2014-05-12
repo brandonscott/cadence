@@ -14,12 +14,19 @@
 
 		public function auth()
 		{
-			if (Auth::attempt(array('email' => $_SERVER['PHP_AUTH_USER'], 'password' => $_SERVER['PHP_AUTH_PW'])))
+			if (!isset($_SERVER['HTTP_AUTHORIZATION']) || $_SERVER['HTTP_AUTHORIZATION'] == '')
+		    {
+				return Response::json(array("success" => "test"));
+		    }
+		    else{
+		    	list($email, $password) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+		    }
+			if (Auth::attempt(array('email' => $email, 'password' => $password)))
 			{
-			   return Response::json(array("success" => true));
+			   return Response::json(Auth::user());
 			}
 
-			return Response::json(array("success" => false));
+			return Response::json(array("id" => 0));
 		}
 	}
 ?>
