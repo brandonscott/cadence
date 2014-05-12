@@ -39,10 +39,26 @@
 			$user->first_name = Input::get("first_name");
 			$user->last_name = Input::get("last_name");
 			$user->mobile_number = Input::get("mobile_number");
+			$user->default_servergroup = 1;//ServerGroup::all()->first()->id;
 
 			$user->save();
 
 			return Response::json($user);
+		}
+
+		public function getDefaultServerGroup($id)
+		{
+			$user = User::find($id);
+			$serverGroup = ServerGroup::find($user->default_servergroup);
+			return Response::json($serverGroup);
+		}
+
+		public function deleteUser($id)
+		{
+			$user = User::find($id);
+			$user->delete();
+
+			return Response::json(array("success" => true));
 		}
 	}
 ?>

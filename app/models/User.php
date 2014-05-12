@@ -13,7 +13,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password');
 
 	protected $fillable = array('email', 'first_name', 'last_name', 'mobile_number');
-	protected $guarded = array('id', 'password', 'password_salt', 'privilege_id', 'locked_out', 'attempts');
+	protected $guarded = array('id', 'password', 'password_salt', 'privilege_id', 'locked_out', 'attempts', 'default_servergroup');
 	public $timestamps = false;
 
 	/**
@@ -55,6 +55,22 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     {
         //
     }
+
+	public function getRememberToken()
+	{
+	    return $this->remember_token;
+	}
+
+	public function setRememberToken($value)
+	{
+	    $this->remember_token = $value;
+	}
+
+	public function getRememberTokenName()
+	{
+	    return 'remember_token';
+	}
+
 	public function setPasswordAttribute($pass){
 		$this->attributes['password'] = Hash::make($pass);
 	}
