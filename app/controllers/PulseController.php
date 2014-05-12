@@ -21,7 +21,7 @@
 
 			$pubnub = App::make('pubnub');
 			$pubnub->publish(array(
-				'channel' => 'pulses',
+				'channel' => 'pulses-' . $pulse->server_id,
 				'message' => json_decode($pulse)
 			));
 
