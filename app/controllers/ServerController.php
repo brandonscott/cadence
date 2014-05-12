@@ -18,7 +18,7 @@
 			$server = new Server;
 
 			$server->servergroup_id = Input::get("servergroup_id");
-			$server->description = Input::get("description");
+			$server->name = Input::get("name");
 			$server->available_disk = Input::get("available_disk");
 			$server->available_ram = Input::get("available_ram");
 			$server->cpu_speed = Input::get("cpu_speed");
@@ -58,8 +58,31 @@
 
 		public function changeStatus($guid)
 		{
-			$server = Server::where('guid', '=', $guid)->update(array('online' => Input::get("status")));
-			return Response::json(Server::where('guid', '=', $guid)->get());
+			Server::where('guid', '=', $guid)->update(array('online' => Input::get("status")));
+			$server = Server::where('guid', '=', $guid)->get();
+
+			if($server->isEmpty())
+			{
+				return Response::make("Server with this GUID not found");
+			}
+
+			if (Input::get("status") == 0)
+			{
+				//Twilio::message('+447534312620', "CADENCE STATUS ALERT: Server '" . $server->first()->description . "' has gone offline.  Urgent attention needed.");
+				//Twilio::call('+447534312620', 'http://cadence-bu.cloudapp.net/voicealert.xml');
+			}
+			else
+			{
+				//Twilio::message('+447534312620', "CADENCE STATUS UPDATE: Server '" . $server->first()->description . "' has come back online.  Have a great day.");
+			}
+
+			$pubnub = App::make('pubnub');
+			$pubnub->publish(array(
+				'channel' => 'pulses-' . $server->first()->id . '-online',
+				'message' => json_encode(array("online" => Input::get("status")))
+			));
+
+			return Response::json($server->first());
 		}
 
 		public function updateServerDetails($guid)
@@ -73,5 +96,35 @@
 			));
 			return Response::json(Server::where('guid', '=', $guid)->get());
 		}
+
+		public function getStatus($guid)
+		{
+			$server = Server::where('guid', '=', $guid)->get();
+			return Response::json($server);
+		}
+
+		public function deleteServer($id)
+		{
+			$server = Server::find($id);
+			$server->delete();
+
+			return Response::json(array("success" => true));
+		}
+
+		public function getUnassignedServers()
+		{
+			return Response::json(Server::ofUnassigned(0)->get());
+		}
+
+		public function getAssignedServers()
+		{
+			return Response::json(Server::ofAssigned(0)->get());
+		}
+
+		public function getServersForStatus($status)
+		{
+			return Response::json(Server::ofStatus($status)->get());
+		}
+
 	}
 ?>
