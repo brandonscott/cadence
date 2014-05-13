@@ -26,7 +26,20 @@
             $serverGroup = ServerGroup::find($id);
             $serverGroup->delete();
 
+            $servers = Server::where("servergroup_id", "=", $id)->get();
+
+            foreach($servers as $server)
+            {
+            	$server->servergroup_id = 0;
+            	$server->save();
+            }
+
             return Response::json(array("success" => true));
         }
+
+        public function getServerGroup($id)
+		{
+			return Response::json(ServerGroup::find($id));
+		}
 	}
 ?>
