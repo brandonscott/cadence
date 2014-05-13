@@ -60,5 +60,31 @@
 
 			return Response::json(array("success" => true));
 		}
+
+	    public function getSubscriptions($id)
+		{
+			$user = User::find($id);
+			$subscriptions = $user->subscription;
+	
+			return Response::json($subscriptions->each(function($subscription){
+				return $subscription->serverGroup;
+			}));
+		}
+
+		public function updateSubscription($id, $subId)
+		{
+			$subscription = Subscription::find($subId);
+			$subscription->text = Input::get('text');
+			$subscription->phonecall = Input::get('phonecall');
+			$subscription->save;
+
+			return Response::json($subscription);
+		}
+
+		public function getUser($id)
+		{
+			return Response::json(User::find($id));
+		}
+
 	}
 ?>
