@@ -66,14 +66,27 @@
 				return Response::make("Server with this GUID not found");
 			}
 
-			if (Input::get("status") == 0)
+			$subscriptionsForServer = Subscription::ofServerID($server->first()->servergroup_id)->get();
+			foreach ($subscriptionsForServer as $subscription)
 			{
-				//Twilio::message('+447534312620', "CADENCE STATUS ALERT: Server '" . $server->first()->description . "' has gone offline.  Urgent attention needed.");
-				//Twilio::call('+447534312620', 'http://cadence-bu.cloudapp.net/voicealert.xml');
-			}
-			else
-			{
-				//Twilio::message('+447534312620', "CADENCE STATUS UPDATE: Server '" . $server->first()->description . "' has come back online.  Have a great day.");
+				if (Input::get("status") == 0)
+				{
+					if($subscription->text == 1)
+					{
+						Twilio::message($subscription->user->mobile_number, "CADENCE STATUS ALERT: Server '" . $server->first()->name . "' has gone offline.  Urgent attention needed.");
+					}
+					if($subscription->phonecall == 1)
+					{
+						Twilio::call($subscription->user->mobile_number, 'http://cadence-bu.cloudapp.net/voicealert.xml');
+					}
+				}
+				else
+				{
+					if($subscription->text == 1)
+					{
+						Twilio::message($subscription->user->mobile_number, "CADENCE STATUS UPDATE: Server '" . $server->first()->name . "' has come back online.  Have a great day.");
+					}
+				}
 			}
 
 			$pubnub = App::make('pubnub');
@@ -87,7 +100,8 @@
 
 		public function updateServerDetails($guid)
 		{
-			$server = Server::where('guid', '=', $guid)->update(array(
+			$server = Server::where('guid', '=', $guid)->first();(array(
+				"servergroup_id" => Input::get("servergroup_id"),
 				"available_disk" => Input::get("available_disk"),
 				"available_ram" => Input::get("available_ram"),
 				"cpu_speed" => Input::get("cpu_speed"),
@@ -95,6 +109,14 @@
 				"os_version" => Input::get("os_version")
 			));
 			return Response::json(Server::where('guid', '=', $guid)->get());
+		}
+
+		public function updateServerGroup($id)
+		{
+			$server = Server::find($id);
+
+			$server->servergroup_id = Input::get('servergroup_id');
+			$server->save();
 		}
 
 		public function getStatus($guid)
@@ -125,6 +147,5 @@
 		{
 			return Response::json(Server::ofStatus($status)->get());
 		}
-
 	}
 ?>
