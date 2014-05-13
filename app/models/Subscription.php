@@ -27,5 +27,25 @@
 
             return Response::json(array("success" => true));
         }
+
+        public function serverGroup()
+        {
+            return $this->hasOne('ServerGroup', 'id', 'servergroup_id');
+        }
+
+        public function user()
+        {
+            return $this->hasOne('User', 'id', 'user_id');
+        }
+
+        public function scopeOfUser($query, $user_id)
+        {
+            return $query->where('user_id', '=', $user_id);
+        }
+
+        public function scopeOfServerID($query, $id)
+        {
+            return $query->where('servergroup_id', '=', $id);
+        }
     }
 ?>
