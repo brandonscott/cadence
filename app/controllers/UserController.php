@@ -32,6 +32,12 @@
 				"firstname"		=> Input::get("firstname"),
 				"lastname"		=> Input::get("lastname")
 			]);*/
+			
+			if (User::where('email','=',Input::get("email"))->count() > 0) {
+				//$user = User::where('email','=', Input::get("email"))->get()->first();
+				return Response::json(array('success' => false , 'error' => 'User already exists with this email'));
+			}
+
 			$user = new User;
 			$user->privilege_id = Input::get("privilege_id");
 			$user->password = Input::get("password");
