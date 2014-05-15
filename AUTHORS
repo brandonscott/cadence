@@ -1,0 +1,18 @@
+This file contains a list of people involved in the development
+of the PHP Cadence API.
+
+If you have questions about the project, please contact anyone
+in the PRIMARY AUTHORS group.
+
+PRIMARY AUTHORS:
+
+ * Brandon Scott (brandonscott) <brandon.scott03@gmail.com>
+   - Main Developer
+   
+ * Chris Franklin (cwfranklin) <chris@cwfranklin.com>
+   - Developer
+
+THANKS TO:
+
+ * James Baldwin (jimmyjamesbaldwin) <jimmyjamesbaldwin@gmail.com>
+   - Helping with Pubnub integration and endpoint testing
