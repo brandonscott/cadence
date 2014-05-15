@@ -4,7 +4,7 @@ Cadence API
 A RESTful PHP API developed for server health reporting in association with Pulse and the Cadence Hosts.
 ------------------------------------------------------
 
-Built using Visual Studio 2013 and the ReSharper plug-in.
+
 
 Contributing
 ------------
@@ -42,7 +42,7 @@ Projects associated with this repository:
 
  * [Cadence Host][chost]
  * [Cadence Service][csrv]
- * [Pulse (Android App][pulse]
+ * [Pulse (Android App)][pulse]
 
  
 [bs]: https://github.com/brandonscott
