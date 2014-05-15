@@ -4,6 +4,11 @@
     </IfModule>
 
     RewriteEngine On
+    Header add Access-Control-Allow-Origin "*"
+    Header add Access-Control-Allow-Methods "GET,PUT, POST, DELETE, OPTIONS"
+    Header add Access-Control-Allow-Headers "Authorization"
+
+    RewriteRule ^vpu - [L,NC]
 
     # Redirect Trailing Slashes...
     RewriteRule ^(.*)/$ /$1 [L,R=301]
