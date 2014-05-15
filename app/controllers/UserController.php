@@ -77,16 +77,30 @@
 			}));
 		}
 
-		public function updateSubscription($id, $subId)
+		public function updateUser($id)
 		{
-			$subscription = Subscription::find($subId);
-			$subscription->text = Input::get('text');
-			$subscription->phonecall = Input::get('phonecall');
-			$subscription->save;
+			$user = User::find($id);
 
-			return Response::json($subscription);
+			$user->email = Input::get("email");
+			$user->first_name = Input::get("first_name");
+			$user->last_name = Input::get("last_name");
+			$user->mobile_number = Input::get("mobile_number");
+
+			$user->save();
+
+			return Response::json($user);
 		}
 
+		public function changePassword()
+		{
+			$user = Auth::user();
+			$user->password = Hash::make(Input::get("newpassword"));
+
+			$user->save();
+
+			return Response::json(array("success" => true));
+		}
+		
 		public function getUser($id)
 		{
 			return Response::json(User::find($id));
