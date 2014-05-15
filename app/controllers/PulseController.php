@@ -3,7 +3,6 @@
 		
 		public function getAll()
 		{
-			
 			return Response::json(Pulse::all());
 		}
 
@@ -22,12 +21,20 @@
 
 			$pubnub = App::make('pubnub');
 			$pubnub->publish(array(
-				'channel' => 'Cadence',
+				'channel' => 'pulses-' . $pulse->server_id,
 				'message' => json_decode($pulse)
 			));
 
 			return Response::json($pulse);
-
 		}
+
+		public function deletePulse($id)
+		{
+			$user = Pulse::find($id);
+			$user->delete();
+
+			return Response::json(array("success" => true));
+		}
+
 	}
 ?>

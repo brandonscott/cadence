@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteBase /vpu
+    RewriteRule ^$ app/public/ [L]
+    RewriteRule (.*) app/public/$1 [L]
+</IfModule>

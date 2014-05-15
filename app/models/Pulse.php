@@ -20,4 +20,16 @@ class Pulse extends Eloquent {
     {
         //
     }
+
+    public function scopeOfServerID($query, $serverID)
+    {
+    	return $query->where('server_id', '=', $serverID);
+    }
+
+    public function scopeOfDays($query, $days)
+    {
+    	$daysAsSeconds = $days * 86400;
+
+    	return $query->where('timestamp', '>', time() - $daysAsSeconds);
+    }
 }

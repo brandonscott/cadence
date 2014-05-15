@@ -1,8 +1,8 @@
 <?php
 	class UserController extends BaseController{
 
-		protected $fillable = array('email', 'firstname', 'lastname');
-		protected $guarded = array('id', 'password');
+		protected $fillable = array('email', 'first_name', 'last_name', 'mobile_number');
+		protected $guarded = array('id', 'password', 'privilege_id');
 		
 		public function getAll()
 		{
@@ -27,11 +27,84 @@
 
 		public function store()
 		{
-			return User::create([
+			/*return User::create([
 				"email"			=> Input::get("email"),
 				"firstname"		=> Input::get("firstname"),
 				"lastname"		=> Input::get("lastname")
-			]);
+			]);*/
+			
+			if (User::where('email','=',Input::get("email"))->count() > 0) {
+				//$user = User::where('email','=', Input::get("email"))->get()->first();
+				return Response::json(array('success' => false , 'error' => 'User already exists with this email'));
+			}
+
+			$user = new User;
+			$user->privilege_id = Input::get("privilege_id");
+			$user->password = Input::get("password");
+			$user->email = Input::get("email");
+			$user->first_name = Input::get("first_name");
+			$user->last_name = Input::get("last_name");
+			$user->mobile_number = Input::get("mobile_number");
+			$user->default_servergroup = 1;//ServerGroup::all()->first()->id;
+
+			$user->save();
+
+			return Response::json($user);
 		}
+
+		public function getDefaultServerGroup($id)
+		{
+			$user = User::find($id);
+			$serverGroup = ServerGroup::find($user->default_servergroup);
+			return Response::json($serverGroup);
+		}
+
+		public function deleteUser($id)
+		{
+			$user = User::find($id);
+			$user->delete();
+
+			return Response::json(array("success" => true));
+		}
+
+	    public function getSubscriptions($id)
+		{
+			$user = User::find($id);
+			$subscriptions = $user->subscription;
+	
+			return Response::json($subscriptions->each(function($subscription){
+				return $subscription->serverGroup;
+			}));
+		}
+
+		public function updateUser($id)
+		{
+			$user = User::find($id);
+
+			$user->email = Input::get("email");
+			$user->first_name = Input::get("first_name");
+			$user->last_name = Input::get("last_name");
+			$user->mobile_number = Input::get("mobile_number");
+
+			$user->save();
+
+			return Response::json($user);
+		}
+
+		public function changePassword()
+		{
+			$user = Auth::user();
+			$user->password = Hash::make(Input::get("newpassword"));
+
+			$user->save();
+
+			return Response::json(array("success" => true));
+		}
+		
+		public function getUser($id)
+		{
+			return Response::json(User::find($id));
+		}
+
 	}
 ?>
