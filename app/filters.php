@@ -65,7 +65,29 @@ Route::filter('superadmin.auth', function()
     {
         return Response::make('Username or Password Incorrect', 401, array('WWW-Authenticate' => 'Basic realm="your site description"'));
     }
- 	if(Auth::user()->privilege_id < 5)
+ 	//if(Auth::user()->privilege_id < 2)
+    ////{
+    ///    return Response::make('You are not authorised to access this resource.', 401, array('WWW-Authenticate' => 'Basic realm="your site description"'));
+    //}
+});
+
+Route::filter('user.auth', function()
+{
+    $email = "";
+    $password = "";
+   
+    if (!isset($_SERVER['HTTP_AUTHORIZATION']) || $_SERVER['HTTP_AUTHORIZATION'] == '')
+    {
+        return Response::make('Please use basic auth to provide a username and password', 401, array('WWW-Authenticate' => 'Basic realm="your site description"'));
+    }
+    else{
+        list($email, $password) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+    }
+    if( ! Auth::attempt(array('email' => $email, 'password' => $password)))
+    {
+        return Response::make('Username or Password Incorrect', 401, array('WWW-Authenticate' => 'Basic realm="your site description"'));
+    }
+    if(Auth::user()->privilege_id > 1)
     {
         return Response::make('You are not authorised to access this resource.', 401, array('WWW-Authenticate' => 'Basic realm="your site description"'));
     }

@@ -101,7 +101,6 @@
 		public function updateServerDetails($guid)
 		{
 			$server = Server::where('guid', '=', $guid)->first()->update(array(
-				"servergroup_id" => Input::get("servergroup_id"),
 				"available_disk" => Input::get("available_disk"),
 				"available_ram" => Input::get("available_ram"),
 				"cpu_speed" => Input::get("cpu_speed"),

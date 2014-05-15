@@ -16,6 +16,18 @@
 			$subscription->push = Input::get('push');
 
 			$subscription->save();
+
+			return Response::json($subscription);
+		}
+
+		public function updateSubscription($id)
+		{
+			$subscription = Subscription::find($id);
+			$subscription->text = Input::get('text');
+			$subscription->phonecall = Input::get('phonecall');
+			$subscription->save();
+
+			return Response::json($subscription);
 		}
 
 		public function deleteSubscription($id)

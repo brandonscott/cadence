@@ -27,5 +27,14 @@
 
 			return Response::json($pulse);
 		}
+
+		public function deletePulse($id)
+		{
+			$user = Pulse::find($id);
+			$user->delete();
+
+			return Response::json(array("success" => true));
+		}
+
 	}
 ?>
